@@ -1,0 +1,116 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Oomira People Schema v3.0.0",
+  "version": "3.0.0",
+  "type": "object",
+  "required": ["schema_version", "people"],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "3.0.0"
+    },
+    "people": {
+      "type": "array",
+      "description": "Array of people associated with the entity",
+      "items": {
+        "type": "object",
+        "required": ["id", "full_name"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique person identifier"
+          },
+          "full_name": {
+            "type": "string",
+            "description": "Person's full name"
+          },
+          "first_name": {
+            "type": "string",
+            "description": "Person's first name"
+          },
+          "last_name": {
+            "type": "string",
+            "description": "Person's last name"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "Person's email address"
+          },
+          "title": {
+            "type": "string",
+            "description": "Person's job title or role"
+          },
+          "company_name": {
+            "type": "string",
+            "description": "Company the person works for"
+          },
+          "company_entity_id": {
+            "type": "string",
+            "description": "Entity ID of the company (if it exists as an entity)"
+          },
+          "relationship_type": {
+            "type": "string",
+            "enum": ["founder", "ceo", "employee", "advisor", "investor", "contributor"],
+            "description": "Relationship to the entity"
+          },
+          "social_profiles": {
+            "type": "object",
+            "properties": {
+              "linkedin_url": { "type": "string", "format": "uri" },
+              "twitter_url": { "type": "string", "format": "uri" },
+              "github_url": { "type": "string", "format": "uri" },
+              "website_url": { "type": "string", "format": "uri" }
+            }
+          },
+          "confidence_score": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "default": 0.5,
+            "description": "Confidence in the person's association (0-1)"
+          },
+          "verification_status": {
+            "type": "string",
+            "enum": ["verified", "unverified", "disputed", "pending"],
+            "default": "unverified",
+            "description": "Verification status of the association"
+          },
+          "discovered_from": {
+            "type": "string",
+            "description": "Source where this person was discovered (commit_author, website, etc.)"
+          },
+          "first_seen": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When this person was first associated with the entity"
+          },
+          "last_seen": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When this person was last seen associated with the entity"
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Additional person metadata",
+            "properties": {
+              "commit_count": { "type": "integer", "description": "Number of commits attributed to this person" },
+              "event_count": { "type": "integer", "description": "Number of events this person is mentioned in" },
+              "bio": { "type": "string", "description": "Person biography or description" },
+              "location": { "type": "string", "description": "Person's location" }
+            }
+          }
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "updated_at": { "type": "string", "format": "date-time" },
+        "total_people": { "type": "integer" },
+        "verified_people": { "type": "integer" },
+        "unique_companies": { "type": "integer" }
+      }
+    }
+  }
+}

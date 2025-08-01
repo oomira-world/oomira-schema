@@ -1,0 +1,395 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Oomira Database Schema v3.0.0",
+  "version": "3.0.0",
+  "description": "Database table structures for Oomira entities",
+  "tables": {
+    "entities": {
+      "description": "Main entity registry table",
+      "columns": {
+        "id": {
+          "type": "TEXT",
+          "primary_key": true,
+          "description": "Entity slug identifier"
+        },
+        "name": {
+          "type": "TEXT",
+          "required": true,
+          "description": "Entity display name"
+        },
+        "type": {
+          "type": "TEXT",
+          "required": true,
+          "enum": ["company", "person", "organization", "project", "product"],
+          "description": "Entity type"
+        },
+        "description": {
+          "type": "TEXT",
+          "description": "Entity description"
+        },
+        "website": {
+          "type": "TEXT",
+          "description": "Primary website URL"
+        },
+        "founded_date": {
+          "type": "DATE",
+          "description": "Entity founding date"
+        },
+        "headquarters": {
+          "type": "TEXT",
+          "description": "Company headquarters location"
+        },
+        "employee_count": {
+          "type": "INTEGER",
+          "description": "Number of employees"
+        },
+        "industry": {
+          "type": "TEXT",
+          "description": "Industry classification"
+        },
+        "status": {
+          "type": "TEXT",
+          "default": "active",
+          "enum": ["active", "inactive", "acquired", "defunct"]
+        },
+        "source_count": {
+          "type": "INTEGER",
+          "default": 0,
+          "description": "Number of verified sources"
+        },
+        "event_count": {
+          "type": "INTEGER",
+          "default": 0,
+          "description": "Number of timeline events"
+        },
+        "people_count": {
+          "type": "INTEGER",
+          "default": 0,
+          "description": "Number of associated people"
+        },
+        "connected_people_count": {
+          "type": "INTEGER",
+          "default": 0,
+          "description": "Number of connected people (including employees)"
+        },
+        "connected_companies_count": {
+          "type": "INTEGER",
+          "default": 0,
+          "description": "Number of connected companies"
+        },
+        "data_quality_score": {
+          "type": "DECIMAL(3,2)",
+          "default": 0.5,
+          "description": "Data quality score (0-1)"
+        },
+        "verification_status": {
+          "type": "TEXT",
+          "default": "unverified",
+          "enum": ["verified", "unverified", "disputed"]
+        },
+        "created_at": {
+          "type": "TIMESTAMP",
+          "default": "NOW()"
+        },
+        "updated_at": {
+          "type": "TIMESTAMP",
+          "default": "NOW()"
+        }
+      },
+      "indexes": [
+        "CREATE INDEX idx_entities_type ON entities(type)",
+        "CREATE INDEX idx_entities_status ON entities(status)",
+        "CREATE INDEX idx_entities_updated_at ON entities(updated_at)"
+      ]
+    },
+    "events": {
+      "description": "Entity timeline events", 
+      "columns": {
+        "id": {
+          "type": "UUID",
+          "primary_key": true,
+          "default": "gen_random_uuid()"
+        },
+        "entity_id": {
+          "type": "TEXT",
+          "foreign_key": "entities(id)",
+          "required": true,
+          "description": "Associated entity ID"
+        },
+        "event_type": {
+          "type": "TEXT",
+          "required": true,
+          "description": "Type of event (development, news, funding, etc.)"
+        },
+        "title": {
+          "type": "TEXT",
+          "required": true,
+          "description": "Event title"
+        },
+        "description": {
+          "type": "TEXT",
+          "description": "Detailed event description"
+        },
+        "event_date": {
+          "type": "TIMESTAMP",
+          "required": true,
+          "description": "When the event occurred"
+        },
+        "source_url": {
+          "type": "TEXT",
+          "description": "Primary source URL"
+        },
+        "source_platform": {
+          "type": "TEXT",
+          "description": "Source platform (github, twitter, etc.)"
+        },
+        "author_name": {
+          "type": "TEXT",
+          "description": "Event author/creator name"
+        },
+        "author_email": {
+          "type": "TEXT",
+          "description": "Event author email"
+        },
+        "impact_score": {
+          "type": "DECIMAL(3,2)",
+          "default": 0.5,
+          "description": "Event impact score (0-1)"
+        },
+        "user_facing": {
+          "type": "BOOLEAN",
+          "default": true,
+          "description": "Whether event should be visible to users"
+        },
+        "tags": {
+          "type": "TEXT[]",
+          "description": "Event tags for categorization"
+        },
+        "metadata": {
+          "type": "JSONB",
+          "description": "Additional event metadata (commit info, etc.)"
+        },
+        "visibility": {
+          "type": "TEXT",
+          "default": "public",
+          "enum": ["public", "private", "internal"]
+        },
+        "created_at": {
+          "type": "TIMESTAMP",
+          "default": "NOW()"
+        },
+        "updated_at": {
+          "type": "TIMESTAMP",
+          "default": "NOW()"
+        }
+      },
+      "indexes": [
+        "CREATE INDEX idx_events_entity_id ON events(entity_id)",
+        "CREATE INDEX idx_events_event_date ON events(event_date)",
+        "CREATE INDEX idx_events_event_type ON events(event_type)",
+        "CREATE INDEX idx_events_visibility ON events(visibility)",
+        "CREATE INDEX idx_events_metadata_id ON events USING GIN ((metadata->>'id'))"
+      ],
+      "unique_constraints": [
+        "UNIQUE(entity_id, (metadata->>'id'))"
+      ]
+    },
+    "sources": {
+      "description": "Entity information sources",
+      "columns": {
+        "id": {
+          "type": "UUID",
+          "primary_key": true,
+          "default": "gen_random_uuid()"
+        },
+        "entity_id": {
+          "type": "TEXT",
+          "foreign_key": "entities(id)",
+          "required": true,
+          "description": "Associated entity ID"
+        },
+        "url": {
+          "type": "TEXT",
+          "required": true,
+          "description": "Source URL"
+        },
+        "title": {
+          "type": "TEXT",
+          "description": "Source title"
+        },
+        "source_type": {
+          "type": "TEXT",
+          "required": true,
+          "enum": ["github_repository", "website", "news_article", "social_media", "documentation", "other"]
+        },
+        "platform": {
+          "type": "TEXT",
+          "description": "Platform name"
+        },
+        "status": {
+          "type": "TEXT",
+          "default": "active",
+          "enum": ["active", "inactive", "archived", "verified", "pending"]
+        },
+        "credibility": {
+          "type": "TEXT",
+          "default": "medium",
+          "enum": ["high", "medium", "low"]
+        },
+        "discovered_by": {
+          "type": "TEXT",
+          "description": "How the source was discovered"
+        },
+        "discovered_at": {
+          "type": "TIMESTAMP",
+          "default": "NOW()"
+        },
+        "validated_at": {
+          "type": "TIMESTAMP",
+          "description": "When source was last validated"
+        },
+        "metadata": {
+          "type": "JSONB",
+          "description": "Additional source metadata"
+        },
+        "created_at": {
+          "type": "TIMESTAMP",
+          "default": "NOW()"
+        },
+        "updated_at": {
+          "type": "TIMESTAMP",
+          "default": "NOW()"
+        }
+      },
+      "indexes": [
+        "CREATE INDEX idx_sources_entity_id ON sources(entity_id)",
+        "CREATE INDEX idx_sources_source_type ON sources(source_type)",
+        "CREATE INDEX idx_sources_status ON sources(status)"
+      ],
+      "unique_constraints": [
+        "UNIQUE(entity_id, url)"
+      ]
+    },
+    "people": {
+      "description": "People associated with entities",
+      "columns": {
+        "id": {
+          "type": "UUID",
+          "primary_key": true,
+          "default": "gen_random_uuid()"
+        },
+        "entity_id": {
+          "type": "TEXT",
+          "foreign_key": "entities(id)",
+          "description": "Primary entity association"
+        },
+        "full_name": {
+          "type": "TEXT",
+          "required": true,
+          "description": "Person's full name"
+        },
+        "first_name": {
+          "type": "TEXT",
+          "description": "First name"
+        },
+        "last_name": {
+          "type": "TEXT",
+          "description": "Last name"
+        },
+        "email": {
+          "type": "TEXT",
+          "description": "Email address"
+        },
+        "title": {
+          "type": "TEXT",
+          "description": "Job title or role"
+        },
+        "company_name": {
+          "type": "TEXT",
+          "description": "Company name"
+        },
+        "company_entity_id": {
+          "type": "TEXT",
+          "foreign_key": "entities(id)",
+          "description": "Company entity ID if exists"
+        },
+        "relationship_type": {
+          "type": "TEXT",
+          "enum": ["founder", "ceo", "employee", "advisor", "investor", "contributor"]
+        },
+        "linkedin_url": {
+          "type": "TEXT",
+          "description": "LinkedIn profile URL"
+        },
+        "twitter_url": {
+          "type": "TEXT",
+          "description": "Twitter profile URL"
+        },
+        "github_url": {
+          "type": "TEXT",
+          "description": "GitHub profile URL"
+        },
+        "website_url": {
+          "type": "TEXT",
+          "description": "Personal website URL"
+        },
+        "confidence_score": {
+          "type": "DECIMAL(3,2)",
+          "default": 0.5,
+          "description": "Confidence in association (0-1)"
+        },
+        "verification_status": {
+          "type": "TEXT",
+          "default": "unverified",
+          "enum": ["verified", "unverified", "disputed", "pending"]
+        },
+        "discovered_from": {
+          "type": "TEXT",
+          "description": "Source of discovery"
+        },
+        "first_seen": {
+          "type": "TIMESTAMP",
+          "description": "First association date"
+        },
+        "last_seen": {
+          "type": "TIMESTAMP",
+          "description": "Last association date"
+        },
+        "metadata": {
+          "type": "JSONB",
+          "description": "Additional person metadata"
+        },
+        "created_at": {
+          "type": "TIMESTAMP",
+          "default": "NOW()"
+        },
+        "updated_at": {
+          "type": "TIMESTAMP",
+          "default": "NOW()"
+        }
+      },
+      "indexes": [
+        "CREATE INDEX idx_people_entity_id ON people(entity_id)",
+        "CREATE INDEX idx_people_company_entity_id ON people(company_entity_id)",
+        "CREATE INDEX idx_people_full_name ON people(full_name)",
+        "CREATE INDEX idx_people_email ON people(email)"
+      ],
+      "unique_constraints": [
+        "UNIQUE(full_name, company_name)",
+        "UNIQUE(email) WHERE email IS NOT NULL"
+      ]
+    }
+  },
+  "views": {
+    "entity_summary": {
+      "description": "Complete entity overview with counts",
+      "query": "CREATE VIEW entity_summary AS SELECT e.*, (SELECT COUNT(*) FROM events WHERE entity_id = e.id) as event_count, (SELECT COUNT(*) FROM sources WHERE entity_id = e.id) as source_count, (SELECT COUNT(*) FROM people WHERE entity_id = e.id OR company_entity_id = e.id) as people_count FROM entities e"
+    }
+  },
+  "functions": {
+    "update_entity_counts": {
+      "description": "Function to update all entity counts",
+      "definition": "CREATE OR REPLACE FUNCTION update_entity_counts(entity_slug TEXT) RETURNS VOID AS $$ BEGIN UPDATE entities SET source_count = (SELECT COUNT(*) FROM sources WHERE sources.entity_id = entities.id), event_count = (SELECT COUNT(*) FROM events WHERE events.entity_id = entities.id), people_count = (SELECT COUNT(*) FROM people WHERE people.company_entity_id = entities.id), connected_people_count = (SELECT COUNT(*) FROM people WHERE people.entity_id = entities.id OR people.company_entity_id = entities.id), updated_at = NOW() WHERE id = entity_slug; END; $$ LANGUAGE plpgsql;"
+    }
+  }
+}

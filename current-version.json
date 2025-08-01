@@ -1,0 +1,12 @@
+{
+  "version": "3.0.0",
+  "released_at": "2025-08-01T18:00:00.000Z",
+  "description": "Current schema version for all Oomira entity structures",
+  "schemas": {
+    "entity": "v3.0.0/entity-schema.json",
+    "events": "v3.0.0/events-schema.json",
+    "sources": "v3.0.0/sources-schema.json",
+    "people": "v3.0.0/people-schema.json",
+    "database": "v3.0.0/database-schema.json"
+  }
+}

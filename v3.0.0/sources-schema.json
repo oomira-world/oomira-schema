@@ -1,0 +1,89 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Oomira Sources Schema v3.0.0",
+  "version": "3.0.0",
+  "type": "object",
+  "required": ["schema_version", "sources"],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "3.0.0"
+    },
+    "sources": {
+      "type": "array",
+      "description": "Array of verified information sources for the entity",
+      "items": {
+        "type": "object",
+        "required": ["id", "url", "type", "status"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique source identifier"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Source URL"
+          },
+          "title": {
+            "type": "string",
+            "description": "Source title or name"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["github_repository", "website", "news_article", "social_media", "documentation", "other"],
+            "description": "Source type classification"
+          },
+          "platform": {
+            "type": "string",
+            "description": "Platform name (GitHub, Twitter, etc.)"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["active", "inactive", "archived", "verified", "pending"],
+            "description": "Source status"
+          },
+          "credibility": {
+            "type": "string",
+            "enum": ["high", "medium", "low"],
+            "default": "medium",
+            "description": "Source credibility assessment"
+          },
+          "discovered_by": {
+            "type": "string",
+            "description": "How the source was discovered (user_added, automatic, etc.)"
+          },
+          "discovered_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the source was discovered"
+          },
+          "validated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the source was last validated"
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Additional source metadata",
+            "properties": {
+              "last_updated": { "type": "string", "format": "date-time" },
+              "content_type": { "type": "string" },
+              "language": { "type": "string" },
+              "tags": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "updated_at": { "type": "string", "format": "date-time" },
+        "total_sources": { "type": "integer" },
+        "active_sources": { "type": "integer" },
+        "validation_status": { "type": "string", "enum": ["current", "stale", "pending"] }
+      }
+    }
+  }
+}

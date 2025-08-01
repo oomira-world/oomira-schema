@@ -1,0 +1,66 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Oomira Events Schema v3.0.0",
+  "version": "3.0.0",
+  "type": "object",
+  "required": ["schema_version", "events"],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "3.0.0"
+    },
+    "events": {
+      "type": "array",
+      "description": "CRITICAL: Flat array of events (NOT nested object). Each event is a direct array item.",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "date", "type"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique event identifier (e.g., github-commit-abc123)"
+          },
+          "title": {
+            "type": "string",
+            "description": "Event title/summary"
+          },
+          "description": {
+            "type": "string",
+            "description": "Detailed event description"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Event date in ISO format"
+          },
+          "type": {
+            "type": "string",
+            "description": "Event type (development, news, funding, etc.)"
+          },
+          "source": {
+            "type": "object",
+            "properties": {
+              "type": { "type": "string", "description": "Source type (github_commit, etc.)" },
+              "url": { "type": "string", "format": "uri", "description": "Source URL" },
+              "repository": { "type": "string", "description": "Repository name" },
+              "commit_sha": { "type": "string", "description": "Git commit SHA" }
+            }
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Additional event metadata (commit info, etc.)"
+          }
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "updated_at": { "type": "string", "format": "date-time" },
+        "total_events": { "type": "integer" },
+        "structure_type": { "type": "string", "const": "flat_array" },
+        "flattened_from": { "type": "string", "description": "Previous structure type" }
+      }
+    }
+  }
+}

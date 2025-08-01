@@ -1,0 +1,117 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Oomira Entity Schema v3.0.0",
+  "version": "3.0.0",
+  "type": "object",
+  "required": ["schema_version", "entity"],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "3.0.0"
+    },
+    "entity": {
+      "type": "object",
+      "required": ["id", "name", "type"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique entity identifier (slug format)"
+        },
+        "name": {
+          "type": "string",
+          "description": "Entity display name"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["company", "person", "organization", "project", "product"],
+          "description": "Entity type classification"
+        },
+        "description": {
+          "type": "string",
+          "description": "Entity description or mission statement"
+        },
+        "identity": {
+          "type": "object",
+          "properties": {
+            "website": { "type": "string", "format": "uri" },
+            "founded_date": { "type": "string", "format": "date" },
+            "headquarters": { "type": "string" },
+            "employee_count": { "type": "integer" },
+            "industry": { "type": "string" },
+            "status": {
+              "type": "string",
+              "enum": ["active", "inactive", "acquired", "defunct"],
+              "default": "active"
+            }
+          }
+        },
+        "social_profiles": {
+          "type": "object",
+          "properties": {
+            "github_url": { "type": "string", "format": "uri" },
+            "twitter_url": { "type": "string", "format": "uri" },
+            "linkedin_url": { "type": "string", "format": "uri" },
+            "crunchbase_url": { "type": "string", "format": "uri" }
+          }
+        },
+        "funding": {
+          "type": "object",
+          "properties": {
+            "total_funding": { "type": "number" },
+            "currency": { "type": "string", "default": "USD" },
+            "last_funding_date": { "type": "string", "format": "date" },
+            "funding_stage": {
+              "type": "string",
+              "enum": ["pre-seed", "seed", "series-a", "series-b", "series-c", "series-d", "ipo", "acquired"]
+            }
+          }
+        },
+        "relationships": {
+          "type": "object",
+          "properties": {
+            "parent_company": { "type": "string", "description": "Parent company entity ID" },
+            "subsidiaries": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Array of subsidiary entity IDs"
+            },
+            "competitors": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Array of competitor entity IDs"
+            },
+            "partners": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Array of partner entity IDs"
+            }
+          }
+        },
+        "metrics": {
+          "type": "object",
+          "properties": {
+            "source_count": { "type": "integer", "default": 0 },
+            "event_count": { "type": "integer", "default": 0 },
+            "people_count": { "type": "integer", "default": 0 },
+            "connected_entities": { "type": "integer", "default": 0 },
+            "last_activity": { "type": "string", "format": "date-time" }
+          }
+        },
+        "metadata": {
+          "type": "object",
+          "properties": {
+            "created_at": { "type": "string", "format": "date-time" },
+            "updated_at": { "type": "string", "format": "date-time" },
+            "structure_version": { "type": "string", "const": "3.0.0" },
+            "data_quality_score": { "type": "number", "minimum": 0, "maximum": 1 },
+            "verification_status": {
+              "type": "string",
+              "enum": ["verified", "unverified", "disputed"],
+              "default": "unverified"
+            }
+          }
+        }
+      }
+    }
+  }
+}

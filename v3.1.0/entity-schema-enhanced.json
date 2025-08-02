@@ -1,0 +1,536 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Oomira Entity Schema v3.1.0 - Enhanced for Homepage Seeds",
+  "version": "3.1.0",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "entity"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "3.1.0"
+    },
+    "entity": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "type"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique entity identifier (slug format)"
+        },
+        "name": {
+          "type": "object",
+          "description": "Entity name with provenance",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "sources": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "last_verified": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          "required": [
+            "value",
+            "sources"
+          ]
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "company",
+            "person",
+            "organization",
+            "project",
+            "product"
+          ],
+          "description": "Entity type classification"
+        },
+        "description": {
+          "type": "object",
+          "description": "Entity description with provenance",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "sources": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "last_verified": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          "required": [
+            "value",
+            "sources"
+          ]
+        },
+        "identity": {
+          "type": "object",
+          "properties": {
+            "website": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "sources": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "last_verified": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "value",
+                "sources"
+              ]
+            },
+            "founded_date": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "sources": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "last_verified": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "value",
+                "sources"
+              ]
+            },
+            "headquarters": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "sources": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "last_verified": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "value",
+                "sources"
+              ]
+            },
+            "employee_count": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "sources": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "last_verified": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "value",
+                "sources"
+              ]
+            },
+            "industry": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "sources": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "last_verified": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "value",
+                "sources"
+              ]
+            }
+          }
+        },
+        "contact_info": {
+          "type": "object",
+          "description": "Contact information discovered from homepage",
+          "properties": {
+            "emails": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "general",
+                      "support",
+                      "sales",
+                      "press",
+                      "careers"
+                    ]
+                  },
+                  "sources": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "last_verified": {
+                    "type": "string",
+                    "format": "date-time"
+                  }
+                },
+                "required": [
+                  "email",
+                  "sources"
+                ]
+              }
+            },
+            "phones": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "number": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "general",
+                      "support",
+                      "sales"
+                    ]
+                  },
+                  "sources": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "last_verified": {
+                    "type": "string",
+                    "format": "date-time"
+                  }
+                },
+                "required": [
+                  "number",
+                  "sources"
+                ]
+              }
+            },
+            "addresses": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "address": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "headquarters",
+                      "office",
+                      "mailing"
+                    ]
+                  },
+                  "sources": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "last_verified": {
+                    "type": "string",
+                    "format": "date-time"
+                  }
+                },
+                "required": [
+                  "address",
+                  "sources"
+                ]
+              }
+            }
+          }
+        },
+        "products_services": {
+          "type": "array",
+          "description": "Products and services discovered from homepage",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "product",
+                  "service",
+                  "platform",
+                  "api"
+                ]
+              },
+              "url": {
+                "type": "string",
+                "format": "uri"
+              },
+              "sources": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "last_verified": {
+                "type": "string",
+                "format": "date-time"
+              }
+            },
+            "required": [
+              "name",
+              "sources"
+            ]
+          }
+        },
+        "relationships": {
+          "type": "object",
+          "properties": {
+            "parent_company": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "entity_id": {
+                  "type": "string"
+                },
+                "relationship_type": {
+                  "type": "string",
+                  "enum": [
+                    "subsidiary",
+                    "division",
+                    "brand",
+                    "acquisition"
+                  ]
+                },
+                "sources": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "last_verified": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "name",
+                "sources"
+              ]
+            },
+            "subsidiaries": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "entity_id": {
+                    "type": "string"
+                  },
+                  "relationship_type": {
+                    "type": "string",
+                    "enum": [
+                      "subsidiary",
+                      "division",
+                      "brand",
+                      "acquisition"
+                    ]
+                  },
+                  "sources": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "last_verified": {
+                    "type": "string",
+                    "format": "date-time"
+                  }
+                },
+                "required": [
+                  "name",
+                  "sources"
+                ]
+              }
+            },
+            "partners": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "entity_id": {
+                    "type": "string"
+                  },
+                  "partnership_type": {
+                    "type": "string",
+                    "enum": [
+                      "strategic",
+                      "technology",
+                      "channel",
+                      "integration"
+                    ]
+                  },
+                  "sources": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "last_verified": {
+                    "type": "string",
+                    "format": "date-time"
+                  }
+                },
+                "required": [
+                  "name",
+                  "sources"
+                ]
+              }
+            }
+          }
+        },
+        "discovered_facts": {
+          "type": "object",
+          "description": "Additional facts discovered from homepage that don't fit standard categories",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "sources": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "last_verified": {
+                "type": "string",
+                "format": "date-time"
+              }
+            },
+            "required": [
+              "value",
+              "sources"
+            ]
+          }
+        },
+        "metadata": {
+          "type": "object",
+          "properties": {
+            "created_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "updated_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "structure_version": {
+              "type": "string",
+              "const": "3.1.0"
+            },
+            "data_quality_score": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "verification_status": {
+              "type": "string",
+              "enum": [
+                "verified",
+                "unverified",
+                "disputed"
+              ],
+              "default": "unverified"
+            },
+            "extraction_method": {
+              "type": "string",
+              "enum": [
+                "homepage_claude_analysis",
+                "manual_entry",
+                "api_import"
+              ],
+              "default": "homepage_claude_analysis"
+            }
+          }
+        }
+      }
+    }
+  }
+}

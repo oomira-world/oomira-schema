@@ -1,0 +1,493 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Oomira Unified Entity Schema v4.0.0",
+  "version": "4.0.0",
+  "description": "Unified schema for ALL entity types (person, company, organization, etc.)",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "entity"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "4.0.0"
+    },
+    "entity": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "type"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique entity identifier (slug format)"
+        },
+        "name": {
+          "type": "object",
+          "description": "Entity name with provenance tracking",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "sources": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "last_verified": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          "required": [
+            "value",
+            "sources"
+          ]
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "person",
+            "company",
+            "organization",
+            "project",
+            "product"
+          ],
+          "description": "Entity type classification"
+        },
+        "description": {
+          "type": "object",
+          "description": "Entity description with provenance",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "sources": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "last_verified": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          "required": [
+            "value",
+            "sources"
+          ]
+        },
+        "identity": {
+          "type": "object",
+          "description": "Core identity information (varies by entity type)",
+          "properties": {
+            "website": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "sources": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "last_verified": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            },
+            "founded_date": {
+              "type": "object",
+              "description": "For companies: founding date. For people: birth date (if public)",
+              "properties": {
+                "value": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "sources": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "last_verified": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            },
+            "location": {
+              "type": "object",
+              "description": "For companies: headquarters. For people: current location",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "sources": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "last_verified": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            },
+            "industry": {
+              "type": "object",
+              "description": "Industry classification (primarily for companies)",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "sources": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "last_verified": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            }
+          }
+        },
+        "contact_info": {
+          "type": "object",
+          "description": "Contact information (emails, phones, addresses)",
+          "properties": {
+            "emails": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "general",
+                      "support",
+                      "personal",
+                      "work"
+                    ]
+                  },
+                  "sources": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "last_verified": {
+                    "type": "string",
+                    "format": "date-time"
+                  }
+                }
+              }
+            },
+            "phones": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "number": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "general",
+                      "support",
+                      "mobile",
+                      "work"
+                    ]
+                  },
+                  "sources": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "last_verified": {
+                    "type": "string",
+                    "format": "date-time"
+                  }
+                }
+              }
+            },
+            "addresses": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "address": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "headquarters",
+                      "office",
+                      "home",
+                      "mailing"
+                    ]
+                  },
+                  "sources": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "last_verified": {
+                    "type": "string",
+                    "format": "date-time"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "social_profiles": {
+          "type": "object",
+          "description": "Social media and professional profiles",
+          "properties": {
+            "linkedin": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "sources": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "last_verified": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            },
+            "twitter": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "sources": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "last_verified": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            },
+            "github": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "sources": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "last_verified": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            }
+          }
+        },
+        "relationships": {
+          "type": "object",
+          "description": "Entity relationships (varies by type)",
+          "properties": {
+            "employment": {
+              "type": "array",
+              "description": "For people: current and past employment",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "company_name": {
+                    "type": "string"
+                  },
+                  "company_entity_id": {
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": "string"
+                  },
+                  "relationship_type": {
+                    "type": "string",
+                    "enum": [
+                      "founder",
+                      "ceo",
+                      "employee",
+                      "advisor",
+                      "board_member"
+                    ]
+                  },
+                  "start_date": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "end_date": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "current": {
+                    "type": "boolean"
+                  },
+                  "sources": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "last_verified": {
+                    "type": "string",
+                    "format": "date-time"
+                  }
+                }
+              }
+            },
+            "corporate": {
+              "type": "object",
+              "description": "For companies: corporate relationships",
+              "properties": {
+                "parent_company": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "entity_id": {
+                      "type": "string"
+                    },
+                    "relationship_type": {
+                      "type": "string",
+                      "enum": [
+                        "subsidiary",
+                        "division",
+                        "brand"
+                      ]
+                    },
+                    "sources": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "last_verified": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  }
+                },
+                "subsidiaries": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "entity_id": {
+                        "type": "string"
+                      },
+                      "relationship_type": {
+                        "type": "string",
+                        "enum": [
+                          "subsidiary",
+                          "division",
+                          "brand"
+                        ]
+                      },
+                      "sources": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "last_verified": {
+                        "type": "string",
+                        "format": "date-time"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "metadata": {
+          "type": "object",
+          "properties": {
+            "created_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "updated_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "structure_version": {
+              "type": "string",
+              "const": "4.0.0"
+            },
+            "data_quality_score": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "verification_status": {
+              "type": "string",
+              "enum": [
+                "verified",
+                "unverified",
+                "disputed"
+              ],
+              "default": "unverified"
+            },
+            "extraction_method": {
+              "type": "string",
+              "enum": [
+                "homepage_claude_analysis",
+                "manual_entry",
+                "api_import",
+                "commit_history_analysis"
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}
